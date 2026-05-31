@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AkSoft - Stok & Cafe Yönetim Sistemleri</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* HEADER & NAV */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--primary); }
+
+        nav ul {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            font-weight: 500;
+            color: var(--text-light);
+            transition: color 0.2s;
+        }
+
+        nav a:hover { color: var(--primary); }
+
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%);
+            color: white;
+            padding: 4rem 1.5rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: all 0.2s;
+            margin: 0.5rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.3); color: white; }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+        /* SECTIONS */
+        .section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CARDS & GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .card h3 { margin-bottom: 0.75rem; color: var(--secondary); }
+        .card p { color: var(--text-light); font-size: 0.95rem; }
+
+        /* TABLES */
+        .table-container {
+            overflow-x: auto;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th { background: #f1f5f9; font-weight: 600; color: var(--secondary); }
+        tr:last-child td { border-bottom: none; }
+
+        /* LISTS & STEPS */
+        .steps { background: var(--surface); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .steps ol { padding-left: 1.5rem; margin: 1rem 0; }
+        .steps li { margin-bottom: 0.5rem; }
+        .steps code { background: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }
+
+        /* FAQ */
+        .faq-item {
+            background: var(--surface);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+        }
+        .faq-item strong { display: block; margin-bottom: 0.5rem; color: var(--secondary); }
+
+        /* DIVIDER */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 4rem auto;
+            max-width: 1000px;
+        }
+
+        /* CAFE HERO VARIANT */
+        .hero-cafe {
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+        }
+        .hero-cafe .btn-primary { background: white; color: #4f46e5; }
+        .hero-cafe .btn-primary:hover { background: #f3f4f6; }
+
+        /* FOOTER */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+        footer p { opacity: 0.8; margin: 0.5rem 0; }
+        footer a { color: var(--success); font-weight: 600; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-container ul { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">Ak<span>Soft</span></a>
+            <nav>
+                <ul>
+                    <li><a href="#ozellikler-stok">Özellikler</a></li>
+                    <li><a href="#kurulum">Kurulum</a></li>
+                    <li><a href="#ekranlar">Ekranlar</a></li>
+                    <li><a href="#roller">Yetkiler</a></li>
+                    <li><a href="#sss">S.S.S</a></li>
+                    <li><a href="#cafe-ozellikler">Cafe Modülü</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn" onclick="document.querySelector('nav ul').classList.toggle('active')">☰</button>
+        </div>
+    </header>
+
+    <!-- STOK HERO -->
+    <section class="hero">
+        <span class="hero-badge">AkSoft Stok Yönetim Sistemi</span>
+        <h1>Küçük ve orta ölçekli işletmeler için<br>hızlı, güçlü ve kullanımı kolay stok & satış programı.</h1>
+        <p>v20 Güncel | Win 10/11 | Ticari Lisans</p>
+        <div>
+            <a href="#kurulum" class="btn btn-primary">📥 Hemen İndir</a>
+            <a href="https://wa.me/905412664569?text=Merhabalar%20A%C4%9Fahan%20Bey.%20AkSoft%20program%C4%B1%20ile%20ilgili%20bilgi%20almak%20istiyorum." class="btn btn-outline">💬 WhatsApp Destek</a>
+        </div>
+    </section>
+
+    <!-- STOK OZELLIKLER -->
+    <section id="ozellikler-stok" class="section">
+        <h2 class="section-title">Neden AkSoft Stok?</h2>
+        <p class="section-subtitle">Karmaşık muhasebe yazılımlarına gerek kalmadan, işletmenizi dakikalar içinde dijitalleştirin.</p>
+        <div class="grid">
+            <div class="card">
+                <h3>⚡ Hızlı ve Kolay</h3>
+                <p>Muhasebe yazılımlarının karmaşıklığına gerek duymadan, dükkanınızı dakikalar içinde yönetmeye başlayın.</p>
+            </div>
+            <div class="card">
+                <h3>🖨️ Gelişmiş Donanım Desteği</h3>
+                <p>Termal fiş yazıcı, 30x50 mm barkod etiket yazıcı ve barkod okuyucu entegrasyonu ile tam uyumlu çalışır.</p>
+            </div>
+            <div class="card">
+                <h3>📊 Detaylı Raporlama</h3>
+                <p>Gün sonu Z Raporu, ödeme yöntemine göre döküm, satış analitiği ve iptal takibi ile işletmenizi anlık izleyin.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- KURULUM & GEREKSINIMLER -->
+    <section id="kurulum" class="section">
+        <h2 class="section-title">Kurulum ve Gereksinimler</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Özellik</th>
+                        <th>Minimum</th>
+                        <th>Önerilen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>İşletim Sistemi</td><td>Windows 10 (64-bit)</td><td>Windows 11</td></tr>
+                    <tr><td>RAM</td><td>2 GB</td><td>4 GB</td></tr>
+                    <tr><td>Disk Alanı</td><td>100 MB</td><td>500 MB</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="steps">
+            <h3>🚀 Başlangıç Adımları</h3>
+            <ol>
+                <li>GitHub üzerinden <a href="https://github.com/agahankayhan/AK-SOFT-POS-STOK-SYSTEM/releases/tag/v20" target="_blank">👉🏽 AKSOFT_STOK_v20.exe 👈🏽</a> dosyasını indirin.</li>
+                <li>İndirilen dosyaya çift tıklayın.</li>
+                <li>Windows Defender uyarısı çıkarsa <code>"Daha fazla bilgi"</code> -> <code>"Yine de çalıştır"</code> seçin.</li>
+                <li>Aşağıdaki varsayılan bilgilerle giriş yapın:
+                    <br><strong>Kullanıcı Adı:</strong> <code>admin</code> | <strong>Şifre:</strong> <code>admin123</code>
+                </li>
+            </ol>
+            <p>🔒 <em>Güvenliğiniz için ilk girişten sonra şifrenizi Ayarlar bölümünden değiştiriniz.</em></p>
+        </div>
+    </section>
+
+    <!-- EKRANLAR & MODULLER -->
+    <section id="ekranlar" class="section">
+        <h2 class="section-title">Modüller ve Ekranlar</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>📊 Kontrol Paneli (Dashboard)</h3>
+                <p>Bugünkü Ciro, Toplam Satış Adedi, Sistemdeki Toplam Ürün ve Stok. Tek tıkla Z Raporu yazdırma.</p>
+            </div>
+            <div class="card">
+                <h3>📦 Stok Yönetimi</h3>
+                <p>Barkod, ad, fiyat ve kategori ile ürün ekleme. 30x50 mm barkod etiketi yazdırma. Kritik stok uyarısı.</p>
+            </div>
+            <div class="card">
+                <h3>💰 Satış (POS) Hızlı Ekranı</h3>
+                <p>Barkod okutun, sepete ekleyin, ödemeyi alın. Nakit/KK/Veresiye/Çek ödeme tipleri. Kalem/toplu indirim.</p>
+            </div>
+            <div class="card">
+                <h3>⚙️ Kapsamlı Ayarlar</h3>
+                <p>Fiş başlık/alt metin, firma bilgileri, tema renk özelleştirmesi, POS cihazı bağlantı port ayarları.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROLLER -->
+    <section id="roller" class="section">
+        <h2 class="section-title">Kullanıcı Rolleri ve Yetki Sistemi</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rol</th>
+                        <th>Satış</th>
+                        <th>Stok</th>
+                        <th>Raporlar</th>
+                        <th>Ayarlar</th>
+                        <th>İptal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Yönetici (Admin)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                    <tr><td>Kasiyer</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+                    <tr><td>Stok Sorumlusu</td><td>❌</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SSS -->
+    <section id="sss" class="section">
+        <h2 class="section-title">Sık Sorulan Sorular</h2>
+        <div class="faq-item">
+            <strong>Verilerim nerede saklanıyor?</strong>
+            <p>Tüm veriler programın bulunduğu klasördeki <code>database.db</code> dosyasında yerel olarak saklanır. Program bulut tabanlı değildir, internet bağlantısı kopsa dahi kesintisiz çalışmaya devam edebilirsiniz.</p>
+        </div>
+        <div class="faq-item">
+            <strong>Eski programdan verileri aktarabilir miyim?</strong>
+            <p>Evet. Bunu admin girişi ile uzaktan bilgisayarınıza bağlanarak <strong>"BİZ SAĞLIYORUZ."</strong></p>
+        </div>
+        <div class="faq-item">
+            <strong>Birden fazla bilgisayarda kullanabilir miyim?</strong>
+            <p>Program lisansları tek bir donanım (Makine ID) üzerine tanımlanmaktadır. Ağ üzerinden ortak veritabanı kullanımı veya çoklu bilgisayar kurulumları için lütfen iletişim kanallarımızdan bize ulaşın.</p>
+        </div>
+        <div class="faq-item">
+            <strong>Lisans anahtarını nasıl alabilirim?</strong>
+            <p>Programı açtıktan sonra gri küçük kutuya tıklayarak "Makine Bilgisi"ni kopyalayıp WhatsApp üzerinden ileterek lisansınızı anında temin edebilirsiniz.</p>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CAFE HERO -->
+    <section class="hero hero-cafe" id="cafe-hero">
+        <span class="hero-badge">AkSoft Cafe Adisyon V1</span>
+        <h1>Kafenizi Yönetmek Artık Çok Kolay</h1>
+        <p>Masaları takip edin, siparişleri hızla alın, otomatik adisyon fişi yazdırın ve satış geçmişini tek tıkla analiz edin.</p>
+        <div>
+            <a href="#kurulum" class="btn btn-primary">🖥️ Windows İçin İndir</a>
+            <a href="#demo" class="btn btn-outline">🎬 Demo İzle</a>
+        </div>
+        <img src="https://via.placeholder.com/600x300/1A1A2E/EAEAEA?text=Program+Ekran+Goruntusunu+Buraya+Ekleyin" alt="Ekran Görüntüsü" style="margin-top:2rem; max-width:100%; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+    </section>
+
+    <!-- CAFE OZELLIKLER -->
+    <section id="cafe-ozellikler" class="section">
+        <h2 class="section-title">Neden AkSoft Cafe?</h2>
+        <p class="section-subtitle">Tamamen size özel renklerle, restoran ve cafe operasyonlarınızı profesyonelce yönetin.</p>
+        <div class="grid">
+            <div class="card">
+                <h3>🪑 Dinamik Masa Yönetimi</h3>
+                <p>Sınırsız masa ekleyin, sipariş durumlarını renklerle anında takip edin. Tek ekranda tüm restoranın kontrolü.</p>
+            </div>
+            <div class="card">
+                <h3>🧾 Otomatik Adisyon Çıktısı</h3>
+                <p>Ödeme alındığında işletme logonuz/isminiz ve ürün detaylarıyla termal yazıcılardan otomatik şık fiş yazdırın.</p>
+            </div>
+            <div class="card">
+                <h3>📈 Detaylı Satış Geçmişi</h3>
+                <p>Personel bazlı satış, Nakit/KK ciro durumu. Tarih filtrelemeli detaylı analiz ekranı.</p>
+            </div>
+            <div class="card">
+                <h3>🎨 Özelleştirilebilir Arayüz</h3>
+                <p>Arka plan, butonlar, vurgu renkleri... İstediğiniz her alanı kendi marka paletinize göre ayarlayın.</p>
+            </div>
+            <div class="card">
+                <h3>🔒 Güvenli Lisans Sistemi</h3>
+                <p>Donanım ID (Machine ID) eşleşmesi ile üst düzey güvenlik. Yetkisiz kopyalamalara karşı korumalı mimari.</p>
+            </div>
+            <div class="card">
+                <h3>👥 Personel ve Yetkilendirme</h3>
+                <p>Kasiyer ve Yönetici seviyeleri. Kasiyerler sadece sipariş alsın, ayarları ve ürünleri sadece siz yönetin.</p>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:3rem;">
+            <h3 style="margin-bottom:1rem; font-size:1.8rem;">İşletmenizi Dijitalleştirmeye Hazır Mısınız?</h3>
+            <p style="color:var(--text-light); margin-bottom:2rem;">Kurulum gerektirmez, tek tıkla çalışır. Hemen bugün deneyin.</p>
+            <a href="mailto:iletisim@sirketiniz.com" class="btn btn-primary">📧 Lisans Almak İçin Ulaşın</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <h2 style="margin-bottom:1rem;">AkSoft Yazılım</h2>
+        <p>Yazılım geliştirme, lisans ve destek işlemleri için iletişime geçebilirsiniz.</p>
+        <p>📞 <a href="https://wa.me/905412664569">+90 541 266 45 69</a></p>
+        <br>
+        <p style="opacity:0.6; font-size:0.85rem;">© 2026 AkSoft Yazılım - Geliştirici: Ağahan Kayhan | AK COMPANY - Tüm hakları saklıdır. (Sürüm v20)</p>
+    </footer>
+
+    <script>
+        // Basit mobil menü toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            const nav = document.querySelector('nav ul');
+            if(nav.style.display === 'flex') {
+                nav.style.display = 'none';
+            } else {
+                nav.style.display = 'flex';
+                nav.style.flexDirection = 'column';
+                nav.style.position = 'absolute';
+                nav.style.top = '60px';
+                nav.style.right = '1.5rem';
+                nav.style.background = '#fff';
+                nav.style.padding = '1rem';
+                nav.style.borderRadius = '12px';
+                nav.style.boxShadow = '0 10px 15px rgba(0,0,0,0.1)';
+            }
+        });
+    </script>
+</body>
+</html>
